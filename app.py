@@ -45,7 +45,7 @@ def main():
 
 @st.experimental_singleton
 def loadData():
-    url = "https://github.com/devergel/MLCovenios/blob/main/Dataset/AcademicMoveWishesOutgoing%20(Mon%20May%2016%202022).xlsx"
+    url = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/AcademicMoveWishesOutgoing%20(Mon%20May%2016%202022).xlsx"
     return pd.read_excel(url)
 
 
