@@ -1,4 +1,2 @@
 streamlit
-pattern
-https://github.com/pandas-profiling/pandas-profiling/archive/master.zip
-markupsafe==2.0.1
+sklearn

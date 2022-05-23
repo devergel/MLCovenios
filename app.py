@@ -4,7 +4,6 @@ import numpy as np
 import sys
 import os
 import os.path as osp
-from pandas_profiling import ProfileReport
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import BernoulliNB, MultinomialNB
 from sklearn.linear_model import Lasso, Ridge
@@ -19,9 +18,6 @@ from sklearn.compose import make_column_selector
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.decomposition import IncrementalPCA, PCA
 from sklearn.svm import SVC
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.pipeline import Pipeline
 def main():
     X_train, y_train, X_test, y_test = preprocess()
     model = model(X_train, y_train)
