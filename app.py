@@ -15,7 +15,7 @@ def main():
     if option=='Segmentacion de Estudiantes':
         name = st.text_input('Segmentacion de Estudiantes')
         try:
-            st.write('Tipos Estudiantes')
+            st.write('Tipos Estudiantes test')
         except:
             st.write('Ocurrio un error al analizar la sugenrencias de convenios')
             
