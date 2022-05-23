@@ -20,7 +20,7 @@ from sklearn.decomposition import IncrementalPCA, PCA
 from sklearn.svm import SVC
 def main():
     X_train, y_train, X_test, y_test = preprocess()
-    model = model(X_train, y_train)
+    random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
     option = st.sidebar.radio('Opciones:',
@@ -30,7 +30,7 @@ def main():
         name = st.text_input('Sugerencia de convenios')
         if st.button('Recomendar'):
             try:
-                y_pred_train_EN = model.predict(X_train)
+                y_pred_train_EN = random.predict(X_train)
                 report_EN = classification_report(y_train, y_pred_train_EN)
                 st.write(report_EN)
             except:
@@ -82,7 +82,7 @@ def preprocess():
 @st.experimental_singleton
 def model(X_train, y_train):
     random = RandomForestClassifier(max_depth=8,random_state=0)
-    random.fit(X_train,y_train)
+    return random.fit(X_train,y_train)
 
       
 if __name__ == '__main__':
