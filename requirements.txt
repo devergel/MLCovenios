@@ -1,3 +1,5 @@
 streamlit
 sklearn
 openpyxl
+matplotlib
+seaborn

@@ -18,8 +18,10 @@ from sklearn.compose import make_column_selector
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.decomposition import IncrementalPCA, PCA
 from sklearn.svm import SVC
+import matplotlib.pyplot as plt
+import seaborn as sns
 def main():
-    X_train, y_train, X_test, y_test = preprocess()
+    data_clean, X_train, y_train, X_test, y_test = preprocess()
     random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
@@ -35,13 +37,13 @@ def main():
                 program = st.selectbox('Programa:',
                 ['Sugerencia de convenios',
                 'Segmentacion de Estudiantes'])
-                promedio = st.number_input("Promedio",0.0,10.0,step=0.1,format="%.2f")
+                promedio = st.number_input("Promedio:",0.0,10.0,step=0.1,format="%.2f")
                 country = st.selectbox('Pais:',
                 ['EEUU',
                 'Alemania'])
                 
             with col2:
-                languaje = st.multiselect("Idioma Max 3 Opciones",
+                languaje = st.multiselect("Idioma Max 3 Opciones:",
                     ['Español',
                     'Alemania',
                     'Ingles',
@@ -51,7 +53,7 @@ def main():
                 elif len(languaje) >3:
                     st.write('Selecciona Maximo 3 Idiomas')
                 
-                semestre = st.number_input("Semestre",1,10)
+                semestre = st.number_input("Semestre:",1,10)
                 
             submit_button = st.form_submit_button(label='Recomendar')
             
@@ -80,7 +82,7 @@ def main():
     if option=='Segmentacion de Estudiantes':
         name = st.text_input('Segmentacion de Estudiantes')
         try:
-            st.write('Tipos Estudiantes test')
+            st.write(clusters(data_clean))
         except:
             st.write('Ocurrio un error al analizar la sugenrencias de convenios')
 
@@ -118,7 +120,7 @@ def preprocess():
     data_clean["Stay: GPA outgoing"]=data["Stay: GPA outgoing"].str.replace(',','.').astype(float)
     data_clean = data_clean.fillna(0)
     train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
-    return train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
+    return data_clean, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
  
 
 @st.experimental_singleton
@@ -126,6 +128,58 @@ def model(X_train, y_train):
     random = RandomForestClassifier(max_depth=8,random_state=0)
     return random.fit(X_train,y_train)
 
+
+@st.experimental_singleton
+def clusters(data_clean):
+    scaler = StandardScaler()
+    datos_scaled = scaler.fit_transform(data_clean)
+    score_1 = []
+    range_values = range(1, 20)
+    for i in range_values:
+        kmeans = KMeans(n_clusters = i)
+        kmeans.fit(datos_scaled)
+        score_1.append([i, kmeans.inertia_])
+        
+    plt.plot(pd.DataFrame(score_1)[0], pd.DataFrame(score_1)[1])
+    plt.title("Elbow Curve")
+    
+    kmeans = KMeans(n_clusters = 8, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
+    labels = kmeans.fit_predict(datos_scaled)
+    
+    y_kmeans = kmeans.predict(datos_scaled)
+    data_clean['Cluster']       = y_kmeans
+    datos_scaled              = pd.DataFrame(datos_scaled)
+    datos_scaled['Cluster']   = y_kmeans
+    
+    for c in data_clean:
+        g   = sns.FacetGrid(data_clean, col='Cluster')
+        g.map(plt.hist, c, color = "red")
+        
+        
+    data_clean["Cluster"].replace({0: 3, 6:5, 7:5, 4:3, 2:3}, inplace=True)
+    datos_scaled["Cluster"].replace({0: 3, 6:5, 7:5, 4:3, 2:3}, inplace=True)
+    clusters_   = data_clean["Cluster"]
+    
+    pca = PCA(n_components = 2)
+    pca.fit(datos_scaled)
+
+    scores = pca.transform(datos_scaled)
+
+    x,y = scores[:,0] , scores[:,1]
+    df_data = pd.DataFrame({'x': x, 'y':y, 'clusters':clusters_})
+    grouping_ = df_data.groupby('clusters')
+    fig, ax = plt.subplots(figsize=(20, 13))
+
+    names = {1: 'Cluster 1', 
+             3: 'Cluster 3',
+             5: 'Cluster 5',}
+
+    for name, grp in grouping_:
+        ax.plot(grp.x, grp.y, marker='o', label = names[name], linestyle='')
+        ax.set_aspect('auto')
+
+    ax.legend()
+    plt.show()
       
 if __name__ == '__main__':
     main()
