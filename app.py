@@ -29,7 +29,7 @@ def main():
     if option=='Sugerencia de Convenios':
         st.subheader("Datos Estudiante")
         with st.form(key="form"):
-            col1,col2 = st.beta_columns([3,3])
+            col1,col2 = st.columns([3,3])
             
             with col1:
                 program = st.sidebar.selectbox('Programa:',
@@ -42,26 +42,32 @@ def main():
                 
             with col2:
                 st.write('Idioma Max 3 opciones:')
-                languaje = st.multiselect("Idioma Max 3 Opciones")
+                languaje = st.multiselect("Idioma Max 3 Opciones",
+                    ['Español',
+                    'Alemania',
+                    'Ingles',
+                    'Portugal'])
                 if len(languaje) <1:
                     st.write('Selecciona Minimo 1 Idioma')
                 elif len(languaje) >3:
                     st.write('Selecciona Maximo 3 Idiomas')
                 
                 semestre = st.number_input("Semestre",1,10)
+                
+            submit_button = st.form_submit_button(label='Recomendar')
             
-        if st.form_submit_button(label='Recomendar'):
-            try:
-                df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje[0],
-                'First Name': languaje[1], 'Last Name': languaje[2], 'Country': country,
-                'First Name': semestre, 'Last Name': country}
+            if submit_button:
+                try:
+                    df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje[0],
+                    'First Name': languaje[1], 'Last Name': languaje[2], 'Country': country,
+                    'First Name': semestre, 'Last Name': country}
 
-                df = df.append(df2, ignore_index = True)
-                y_pred_train_EN = random.predict_proba(df)
-                report_EN = classification_report(y_train, y_pred_train_EN)
-                st.write(report_EN)
-            except:
-                st.write('Ocurrio un error al analizar la sugenrencias de convenios')
+                    df = df.append(df2, ignore_index = True)
+                    y_pred_train_EN = random.predict_proba(df)
+                    report_EN = classification_report(y_train, y_pred_train_EN)
+                    st.write(report_EN)
+                except:
+                    st.write('Ocurrio un error al analizar la sugenrencias de convenios')
     if option=='Segmentacion de Estudiantes':
         name = st.text_input('Segmentacion de Estudiantes')
         try:
