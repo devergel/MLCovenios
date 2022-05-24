@@ -35,7 +35,7 @@ def main():
                 program = st.selectbox('Programa:',
                 ['Sugerencia de convenios',
                 'Segmentacion de Estudiantes'])
-                promedio = st.number_input("Promedio",0.0,10.0,step=1e-6,format="%.2f")
+                promedio = st.number_input("Promedio",0.0,10.0,step=0.1,format="%.2f")
                 country = st.selectbox('Pais:',
                 ['EEUU',
                 'Alemania'])
@@ -57,8 +57,18 @@ def main():
             
             if submit_button:
                 try:
-                    df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje[0],
-                    'First Name': languaje[1], 'Last Name': languaje[2], 'Country': country,
+                    try:
+                        if len(languaje>=1)
+                            lenguaje_1 = languaje[0]
+                        if len(languaje>=2)
+                            lenguaje_2 = languaje[1]
+                        if len(languaje>=3)
+                            lenguaje_3 = languaje[2]
+                    except:
+                        st.write('Ocurrio un error al extraer los idiomas')
+                    
+                    df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje_1,
+                    'First Name': languaje_2, 'Last Name': languaje_3, 'Country': country,
                     'First Name': semestre, 'Last Name': country}
 
                     df = df.append(df2, ignore_index = True)
