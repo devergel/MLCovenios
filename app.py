@@ -132,7 +132,7 @@ def model(X_train, y_train):
 
 
 @st.experimental_singleton
-def clusters(data_clean, data_scaled):
+def clusters(data_clean, datos_scaled):
     
     kmeans = KMeans(n_clusters = 8, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
     labels = kmeans.fit_predict(datos_scaled)
