@@ -92,6 +92,12 @@ def preprocess():
     data = loadData()
     lb_make = LabelEncoder()
     data_clean = data
+    countryDf=pd.DataFrame()
+    idioma1Df=pd.DataFrame()
+    idioma2Df=pd.DataFrame()
+    idioma3Df=pd.DataFrame()
+    instDf=pd.DataFrame()
+    programDf=pd.DataFrame()
     data_clean.drop('Stay wish: ID', inplace=True, axis=1)
     data_clean.drop(["Stay: Calificación total 1"], inplace=True, axis=1)
     data_clean.drop(["Stay: Calificación total 2"], inplace=True, axis=1)
@@ -128,12 +134,12 @@ def preprocess():
     train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
-    countryDf=np.unique(countryDf[['code','label']], axis=0)
-    idioma1Df=np.unique(idioma1Df[['code','label']], axis=0)
-    idioma2Df=np.unique(idioma2Df[['code','label']], axis=0)
-    idioma3Df=np.unique(idioma3Df[['code','label']], axis=0)
-    instDf=np.unique(instDf[['code','label']], axis=0)
-    programDf=np.unique(programDf[['code','label']], axis=0)
+    countryDf=countryDf.drop_duplicates(['code','label'])[['code','label']]
+    idioma1Df=idioma1Df.drop_duplicates(['code','label'])[['code','label']]
+    idioma2Df=idioma2Df.drop_duplicates(['code','label'])[['code','label']]
+    idioma3Df=idioma3Df.drop_duplicates(['code','label'])[['code','label']]
+    instDf=instDf.drop_duplicates(['code','label'])[['code','label']]
+    programDf=programDf.drop_duplicates(['code','label'])[['code','label']]
     return countryDf, idioma1Df, idioma2Df, idioma3Df, instDf, programDf, data_clean, datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
  
 
