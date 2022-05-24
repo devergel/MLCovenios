@@ -41,7 +41,6 @@ def main():
                 'Alemania'])
                 
             with col2:
-                st.write('Idioma Max 3 opciones:')
                 languaje = st.multiselect("Idioma Max 3 Opciones",
                     ['Español',
                     'Alemania',
@@ -52,7 +51,7 @@ def main():
                 elif len(languaje) >3:
                     st.write('Selecciona Maximo 3 Idiomas')
                 
-                semestre = st.number_input("Semestre",1,10)
+                semestre = st.number_input("Semestre",1,10,format="%.2f")
                 
             submit_button = st.form_submit_button(label='Recomendar')
             
