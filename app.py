@@ -133,15 +133,6 @@ def model(X_train, y_train):
 def clusters(data_clean):
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
-    score_1 = []
-    range_values = range(1, 20)
-    for i in range_values:
-        kmeans = KMeans(n_clusters = i)
-        kmeans.fit(datos_scaled)
-        score_1.append([i, kmeans.inertia_])
-        
-    plt.plot(pd.DataFrame(score_1)[0], pd.DataFrame(score_1)[1])
-    plt.title("Elbow Curve")
     
     kmeans = KMeans(n_clusters = 8, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
     labels = kmeans.fit_predict(datos_scaled)
@@ -149,12 +140,7 @@ def clusters(data_clean):
     y_kmeans = kmeans.predict(datos_scaled)
     data_clean['Cluster']       = y_kmeans
     datos_scaled              = pd.DataFrame(datos_scaled)
-    datos_scaled['Cluster']   = y_kmeans
-    
-    for c in data_clean:
-        g   = sns.FacetGrid(data_clean, col='Cluster')
-        g.map(plt.hist, c, color = "red")
-        
+    datos_scaled['Cluster']   = y_kmeans        
         
     data_clean["Cluster"].replace({0: 3, 6:5, 7:5, 4:3, 2:3}, inplace=True)
     datos_scaled["Cluster"].replace({0: 3, 6:5, 7:5, 4:3, 2:3}, inplace=True)
