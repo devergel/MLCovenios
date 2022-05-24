@@ -23,12 +23,40 @@ def main():
     random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
-    option = st.sidebar.radio('Opciones:',
-                ['Sugerencia de convenios',
+    option = st.sidebar.selectbox('Opciones:',
+                ['Sugerencia de Convenios',
                 'Segmentacion de Estudiantes'])
     if option=='Sugerencia de convenios':
-        name = st.text_input('Sugerencia de convenios')
-        if st.button('Recomendar'):
+        st.subheader("Datos Estudiante")
+        whit st.form(key="form")
+            col1,col2 = st.beta_columns([3,3])
+            
+            whit col1:
+                program = st.sidebar.selectbox('Programa:',
+                ['Sugerencia de convenios',
+                'Segmentacion de Estudiantes'])
+                promedio = st.number_input("Promedio",1,10)
+                country = st.sidebar.selectbox('Pais:',
+                ['EEUU',
+                'Alemania'])
+                
+            whit col2:
+                st.write('Idioma Max 3 opciones:')
+                option_s = st.checkbox('Español')
+                option_u = st.checkbox('Ingles')
+                option_v = st.checkbox('Franses')
+                option_a = st.checkbox('Aleman')
+                option_t = st.checkbox('Portugues')
+                known_variables = option_s + option_u + option_v + option_a + option_t
+
+                if known_variables <1:
+                    st.write('Selecciona Minimo 1 Idioma')
+                elif known_variables >3:
+                    st.write('Selecciona Maximo 3 Idiomas')
+                
+                promedio = st.number_input("Semestre",1,10)
+            
+        if st.form_submit_button(label='Recomendar'):
             try:
                 y_pred_train_EN = random.predict(X_train)
                 report_EN = classification_report(y_train, y_pred_train_EN)
