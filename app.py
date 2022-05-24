@@ -35,7 +35,7 @@ def main():
                 program = st.selectbox('Programa:',
                 ['Sugerencia de convenios',
                 'Segmentacion de Estudiantes'])
-                promedio = st.number_input("Promedio",1,10)
+                promedio = st.number_input("Promedio",0.0,10.0,step=1e-6,format="%.2f")
                 country = st.selectbox('Pais:',
                 ['EEUU',
                 'Alemania'])
@@ -51,7 +51,7 @@ def main():
                 elif len(languaje) >3:
                     st.write('Selecciona Maximo 3 Idiomas')
                 
-                semestre = st.number_input("Semestre",1,10,format="%.2f")
+                semestre = st.number_input("Semestre",1,10)
                 
             submit_button = st.form_submit_button(label='Recomendar')
             
