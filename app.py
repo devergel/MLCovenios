@@ -58,11 +58,11 @@ def main():
             if submit_button:
                 try:
                     try:
-                        if len(languaje>=1):
+                        if len(languaje)>=1:
                             lenguaje_1 = languaje[0]
-                        if len(languaje>=2):
+                        if len(languaje)>=2:
                             lenguaje_2 = languaje[1]
-                        if len(languaje>=3):
+                        if len(languaje)>=3:
                             lenguaje_3 = languaje[2]
                     except:
                         st.write('Ocurrio un error al extraer los idiomas')
