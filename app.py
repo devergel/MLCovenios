@@ -28,7 +28,7 @@ def main():
                 'Segmentacion de Estudiantes'])
     if option=='Sugerencia de convenios':
         st.subheader("Datos Estudiante")
-        cc st.form(key="form"):
+        with st.form(key="form"):
             col1,col2 = st.beta_columns([3,3])
             
             with col1:
@@ -42,23 +42,19 @@ def main():
                 
             with col2:
                 st.write('Idioma Max 3 opciones:')
-                option_s = st.checkbox('Español')
-                option_u = st.checkbox('Ingles')
-                option_v = st.checkbox('Franses')
-                option_a = st.checkbox('Aleman')
-                option_t = st.checkbox('Portugues')
-                known_variables = option_s + option_u + option_v + option_a + option_t
-
-                if known_variables <1:
+                languaje = st.multiselect("Idioma Max 3 Opciones")
+                if len(languaje) <1:
                     st.write('Selecciona Minimo 1 Idioma')
-                elif known_variables >3:
+                elif len(languaje) >3:
                     st.write('Selecciona Maximo 3 Idiomas')
                 
-                promedio = st.number_input("Semestre",1,10)
+                semestre = st.number_input("Semestre",1,10)
             
         if st.form_submit_button(label='Recomendar'):
             try:
-                df2 = {'First Name': program, 'Last Name': promedio, 'Country': 'India'}
+                df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje[0],
+                'First Name': languaje[1], 'Last Name': languaje[2], 'Country': country,
+                'First Name': semestre, 'Last Name': country}
 
                 df = df.append(df2, ignore_index = True)
                 y_pred_train_EN = random.predict_proba(df)
