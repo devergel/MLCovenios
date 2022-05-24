@@ -21,7 +21,7 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 import seaborn as sns
 def main():
-    data_clean, data_scaled, X_train, y_train, X_test, y_test = preprocess()
+    countryDf, idioma1Df, idioma2Df, idioma3Df, instDf, programDf, data_clean, data_scaled, X_train, y_train, X_test, y_test = preprocess()
     random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
@@ -35,19 +35,14 @@ def main():
             
             with col1:
                 program = st.selectbox('Programa:',
-                ['Sugerencia de convenios',
-                'Segmentacion de Estudiantes'])
+                programDf["label"])
                 promedio = st.number_input("Promedio:",0.0,10.0,step=0.1,format="%.2f")
                 country = st.selectbox('Pais:',
-                ['EEUU',
-                'Alemania'])
+                countryDf["label"])
                 
             with col2:
                 languaje = st.multiselect("Idioma Max 3 Opciones:",
-                    ['Español',
-                    'Alemania',
-                    'Ingles',
-                    'Portugal'])
+                    countryDf["label"])
                 if len(languaje) <1:
                     st.write('Selecciona Minimo 1 Idioma')
                 elif len(languaje) >3:
@@ -80,7 +75,6 @@ def main():
                 except:
                     st.write('Ocurrio un error al analizar la sugenrencias de convenios')
     if option=='Segmentacion de Estudiantes':
-        name = st.text_input('Segmentacion de Estudiantes')
         try:
             st.pyplot(clusters(data_clean, data_scaled))
         except:
@@ -106,23 +100,41 @@ def preprocess():
     data_clean["Status offer"] = lb_make.fit_transform(data["Status offer"])
     data_clean["Form"] = lb_make.fit_transform(data["Form"])
     data_clean["Start period"] = lb_make.fit_transform(data["Start period"])
+    countryDf["label"] = data_clean["Country"]
     data_clean["Country"] = lb_make.fit_transform(data["Country"])
+    countryDf["code"] = data_clean["Country"]
     data_clean["Stay: Examen 1"] = lb_make.fit_transform(data["Stay: Examen 1"])
+    idioma1Df["label"] = data_clean["Stay: Idioma 1"]
     data_clean["Stay: Idioma 1"] = lb_make.fit_transform(data["Stay: Idioma 1"])
+    idioma1Df["code"] = data_clean["Stay: Idioma 1"]
+    idioma2Df["label"] = data_clean["Stay: Idioma 2"]
     data_clean["Stay: Idioma 2"] = lb_make.fit_transform(data["Stay: Idioma 2"])
+    idioma2Df["code"] = data_clean["Stay: Idioma 2"]
+    idioma3Df["label"] = data_clean["Stay: Idioma 3"]
     data_clean["Stay: Idioma 3"] = lb_make.fit_transform(data["Stay: Idioma 3"])
+    idioma3Df["code"] = data_clean["Stay: Idioma 3"]
     data_clean["Stay: Examen 3"] = lb_make.fit_transform(data["Stay: Examen 3"])
     data_clean["Stay: Examen 2"] = lb_make.fit_transform(data["Stay: Examen 2"])
+    instDf["label"] = data_clean["Institution"]
     data_clean["Institution"] = lb_make.fit_transform(data["Institution"])
+    instDf["code"] = data_clean["Institution"]
     data_clean["Level"] = lb_make.fit_transform(data["Level"])
     data_clean["Stay: Status"] = lb_make.fit_transform(data["Stay: Status"])
+    programDf["label"] = data_clean["Stay: Degree programme"]
     data_clean["Stay: Degree programme"] = lb_make.fit_transform(data["Stay: Degree programme"])
+    programDf["code"] = data_clean["Stay: Degree programme"]
     data_clean["Stay: GPA outgoing"]=data["Stay: GPA outgoing"].str.replace(',','.').astype(float)
     data_clean = data_clean.fillna(0)
     train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
-    return data_clean, datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
+    countryDf=np.unique(countryDf[['code','label']], axis=0)
+    idioma1Df=np.unique(idioma1Df[['code','label']], axis=0)
+    idioma2Df=np.unique(idioma2Df[['code','label']], axis=0)
+    idioma3Df=np.unique(idioma3Df[['code','label']], axis=0)
+    instDf=np.unique(instDf[['code','label']], axis=0)
+    programDf=np.unique(programDf[['code','label']], axis=0)
+    return countryDf, idioma1Df, idioma2Df, idioma3Df, instDf, programDf, data_clean, datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
  
 
 @st.experimental_singleton
