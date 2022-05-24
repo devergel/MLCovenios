@@ -21,7 +21,7 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 import seaborn as sns
 def main():
-    data_clean, X_train, y_train, X_test, y_test = preprocess()
+    data_clean, data_scaled, X_train, y_train, X_test, y_test = preprocess()
     random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
@@ -82,7 +82,7 @@ def main():
     if option=='Segmentacion de Estudiantes':
         name = st.text_input('Segmentacion de Estudiantes')
         try:
-            st.pyplot(clusters(data_clean))
+            st.pyplot(clusters(data_clean, data_scaled))
         except:
             st.write('Ocurrio un error al analizar la sugenrencias de convenios')
 
@@ -122,7 +122,7 @@ def preprocess():
     train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
-    return datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
+    return data_clean, datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
  
 
 @st.experimental_singleton
@@ -132,7 +132,7 @@ def model(X_train, y_train):
 
 
 @st.experimental_singleton
-def clusters(datos_scaled):
+def clusters(data_clean, data_scaled):
     
     kmeans = KMeans(n_clusters = 8, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
     labels = kmeans.fit_predict(datos_scaled)
