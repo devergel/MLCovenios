@@ -26,7 +26,7 @@ def main():
     option = st.sidebar.selectbox('Opciones:',
                 ['Sugerencia de Convenios',
                 'Segmentacion de Estudiantes'])
-    if option=='Sugerencia de convenios':
+    if option=='Sugerencia de Convenios':
         st.subheader("Datos Estudiante")
         with st.form(key="form"):
             col1,col2 = st.beta_columns([3,3])
