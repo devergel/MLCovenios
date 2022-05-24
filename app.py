@@ -42,7 +42,7 @@ def main():
                 
             with col2:
                 languaje = st.multiselect("Idioma Max 3 Opciones:",
-                    countryDf["label"])
+                    idioma1Df["label"])
                 if len(languaje) <1:
                     st.write('Selecciona Minimo 1 Idioma')
                 elif len(languaje) >3:
@@ -64,11 +64,15 @@ def main():
                     except:
                         st.write('Ocurrio un error al extraer los idiomas')
                     
-                    df2 = {'First Name': program, 'Last Name': promedio, 'Country': languaje_1,
-                    'First Name': languaje_2, 'Last Name': languaje_3, 'Country': country,
-                    'First Name': semestre, 'Last Name': country}
+                    loadCountryAndInstDf = loadCountryAndInst(country)
+                    df = df.reset_index()  # make sure indexes pair with number of rows
+                    for index, row in df.iterrows():
+                        df2 = {'First Name': programDf[programDf['label'] == program]["code"], 'Last Name': promedio, 'Country': idioma1Df[idioma1Df['label'] == languaje_1]["code"],
+                        'First Name': idioma2Df[idioma2Df['label'] == languaje_2]["code"], 'Last Name': idioma3Df[idioma3Df['label'] == languaje_3]["code"], 'Country': countryDf[countryDf['label'] == row["Country"]]["code"],
+                        'First Name': semestre, 'Last Name': instDf[instDf['label'] == row["Name"]]["code"]}
 
-                    df = df.append(df2, ignore_index = True)
+                        df = df.append(df2, ignore_index = True)
+                    
                     y_pred_train_EN = random.predict_proba(df)
                     report_EN = classification_report(y_train, y_pred_train_EN)
                     st.write(report_EN)
@@ -80,6 +84,13 @@ def main():
         except:
             st.write('Ocurrio un error al analizar la sugenrencias de convenios')
 
+
+@st.experimental_singleton
+def loadCountryAndInst(country):
+    url2 = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/Institutions%20(Mon%20May%2016%202022).xlsx"
+    countryAndInstDf = pd.read_excel(url2)
+    return countryAndInstDf[countryAndInstDf['Country'] == country]
+    
 
 @st.experimental_singleton
 def loadData():
