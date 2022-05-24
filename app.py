@@ -28,7 +28,7 @@ def main():
                 'Segmentacion de Estudiantes'])
     if option=='Sugerencia de convenios':
         st.subheader("Datos Estudiante")
-        whit st.form(key="form")
+        whit st.form(key="form"):
             col1,col2 = st.beta_columns([3,3])
             
             whit col1:
@@ -58,7 +58,10 @@ def main():
             
         if st.form_submit_button(label='Recomendar'):
             try:
-                y_pred_train_EN = random.predict(X_train)
+                df2 = {'First Name': program, 'Last Name': promedio, 'Country': 'India'}
+
+                df = df.append(df2, ignore_index = True)
+                y_pred_train_EN = random.predict_proba(df)
                 report_EN = classification_report(y_train, y_pred_train_EN)
                 st.write(report_EN)
             except:
