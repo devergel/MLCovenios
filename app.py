@@ -28,10 +28,10 @@ def main():
                 'Segmentacion de Estudiantes'])
     if option=='Sugerencia de convenios':
         st.subheader("Datos Estudiante")
-        whit st.form(key="form"):
+        cc st.form(key="form"):
             col1,col2 = st.beta_columns([3,3])
             
-            whit col1:
+            with col1:
                 program = st.sidebar.selectbox('Programa:',
                 ['Sugerencia de convenios',
                 'Segmentacion de Estudiantes'])
@@ -40,7 +40,7 @@ def main():
                 ['EEUU',
                 'Alemania'])
                 
-            whit col2:
+            with col2:
                 st.write('Idioma Max 3 opciones:')
                 option_s = st.checkbox('Español')
                 option_u = st.checkbox('Ingles')
