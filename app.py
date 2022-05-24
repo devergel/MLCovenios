@@ -120,7 +120,9 @@ def preprocess():
     data_clean["Stay: GPA outgoing"]=data["Stay: GPA outgoing"].str.replace(',','.').astype(float)
     data_clean = data_clean.fillna(0)
     train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
-    return data_clean, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
+    scaler = StandardScaler()
+    datos_scaled = scaler.fit_transform(data_clean)
+    return datos_scaled, train.drop(['Status selection'],axis=1), train['Status selection'], test.drop(['Status selection'],axis=1), test['Status selection']  
  
 
 @st.experimental_singleton
@@ -130,9 +132,7 @@ def model(X_train, y_train):
 
 
 @st.experimental_singleton
-def clusters(data_clean):
-    scaler = StandardScaler()
-    datos_scaled = scaler.fit_transform(data_clean)
+def clusters(datos_scaled):
     
     kmeans = KMeans(n_clusters = 8, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
     labels = kmeans.fit_predict(datos_scaled)
