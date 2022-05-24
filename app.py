@@ -82,7 +82,7 @@ def main():
     if option=='Segmentacion de Estudiantes':
         name = st.text_input('Segmentacion de Estudiantes')
         try:
-            clusters(data_clean)
+            st.pyplot(clusters(data_clean))
         except:
             st.write('Ocurrio un error al analizar la sugenrencias de convenios')
 
@@ -179,7 +179,7 @@ def clusters(data_clean):
         ax.set_aspect('auto')
 
     ax.legend()
-    st.pyplot(fig)
+    return fig
       
 if __name__ == '__main__':
     main()
