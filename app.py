@@ -32,11 +32,11 @@ def main():
             col1,col2 = st.columns([3,3])
             
             with col1:
-                program = st.sidebar.selectbox('Programa:',
+                program = st.selectbox('Programa:',
                 ['Sugerencia de convenios',
                 'Segmentacion de Estudiantes'])
                 promedio = st.number_input("Promedio",1,10)
-                country = st.sidebar.selectbox('Pais:',
+                country = st.selectbox('Pais:',
                 ['EEUU',
                 'Alemania'])
                 
