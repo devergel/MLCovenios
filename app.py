@@ -218,12 +218,13 @@ def main():
 
                 rank.drop(["institutionID"], inplace=True, axis=1)
                 rank.drop(["RelationID"], inplace=True, axis=1)
+                rank.drop(["count_max"], inplace=True, axis=1)
                 rank.rename(
-                    columns={'ConvenioName': 'Stay Opportunity', 'Degree programme': 'Available Degree Programs',
+                    columns={'ConvenioName': 'Stay Opportunity', 'Degree programme': 'Available Degree Programs', 'availabiltyIndex':'Availability index',
                              'Name': 'Institution', 'Preferencia': 'Recommended by:', 0:'Rejection probability', 1:'Selection probability'}, inplace=True)
                 rank = rank[
                     ['Recommended by:', 'Country', 'Institution', 'Stay Opportunity', 'Available Degree Programs',
-                     'count_max', 'availabiltyIndex', 'Selection probability', 'Rejection probability']]
+                     'Selection probability', 'Rejection probability','Availability index']]
 
                 st.write(rank)
     if option == 'Student segmentation analysis':
