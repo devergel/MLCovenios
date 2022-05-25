@@ -29,8 +29,7 @@ def main():
     st.title('Exchange recommendation system for undergraduate students at Universidad de los Andes')
     st.sidebar.title('Exchange')
     option = st.sidebar.selectbox('Options:',
-                                  ['Exchange recommendation',
-                                   'Student segmentation analysis'])
+                                  ['Exchange recommendation'])
     if option == 'Exchange recommendation':
         st.subheader("Student data")
         with st.form(key="form"):
@@ -202,18 +201,19 @@ def main():
                            'Portuguese': 1 if lenguaje_1 == 'Portuguese' or lenguaje_2 == 'Portuguese' or lenguaje_3 == 'Portuguese' else 0}
 
                     df = df.append(df2, ignore_index=True)
-
-                y_pred_country = random.predict_proba(df)
-                df_y_country = pd.DataFrame(y_pred_country)
-                aux3 = pd.concat([seats_country, df_y_country], axis=1)
-                aux3 = aux3[aux3["RelationID"] > 0]
-                aux3['count_max'] = aux3.groupby(['RelationID'])[1].transform(max)
-                aux3 = aux3[aux3["count_max"] == aux3[1]]
-                aux3 = aux3.sort_values(by=[1], ascending=False).head(1)
-                aux3["Preferencia"] = "Country"
+                    
+                if df:
+                    y_pred_country = random.predict_proba(df)
+                    df_y_country = pd.DataFrame(y_pred_country)
+                    aux3 = pd.concat([seats_country, df_y_country], axis=1)
+                    aux3 = aux3[aux3["RelationID"] > 0]
+                    aux3['count_max'] = aux3.groupby(['RelationID'])[1].transform(max)
+                    aux3 = aux3[aux3["count_max"] == aux3[1]]
+                    aux3 = aux3.sort_values(by=[1], ascending=False).head(1)
+                    aux3["Preferencia"] = "Country"
+                    rank = rank.append(aux3, ignore_index=True)
 
                 rank = aux.append(aux2, ignore_index=True)
-                rank = rank.append(aux3, ignore_index=True)
                 rank = rank.sort_values(by=[1], ascending=False)
 
                 rank.drop(["institutionID"], inplace=True, axis=1)
@@ -227,11 +227,6 @@ def main():
                      'Selection probability', 'Rejection probability','Availability index']]
 
                 st.write(rank)
-    if option == 'Student segmentation analysis':
-        try:
-            st.pyplot(clusters(data_clean, data_scaled))
-        except:
-            st.write('Ocurrio un error al analizar la sugenrencias de convenios')
 
 
 @st.experimental_singleton
