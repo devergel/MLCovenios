@@ -287,7 +287,7 @@ def loadCountryAndInst(country, program):
     seats_index = new3
     
     if program:
-        seats_index.dropna(subset = ['Degree programme'])
+        seats_index = seats_index.dropna(subset = ['Degree programme'])
         seats_index = seats_index[seats_index["Degree programme"].str.contains(program)]
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
