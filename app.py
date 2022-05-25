@@ -83,7 +83,7 @@ def main():
                         InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
                         
                     try: 
-                        fac=facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0)
+                        fac=facDf[facDf['label'] == facultades[facultades["Name"].str.contains(program)]["Sub institution"].values.item(0)]["code"].values.item(0)
                     except:
                         fac = 1
 
@@ -117,7 +117,7 @@ def main():
                         InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
                         
                     try: 
-                        fac=facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0)
+                        fac=facDf[facDf['label'] == facultades[facultades["Name"].str.contains(program)]["Sub institution"].values.item(0)]["code"].values.item(0)
                     except:
                         fac = 1
 
@@ -150,7 +150,7 @@ def main():
                         InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
                         
                     try: 
-                        fac=facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0)
+                        fac=facDf[facDf['label'] == facultades[facultades["Name"].str.contains(program)]["Sub institution"].values.item(0)]["code"].values.item(0)
                     except:
                         fac = 1
 
