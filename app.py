@@ -66,7 +66,7 @@ def main():
                 except:
                     st.write('Ocurrio un error al extraer los idiomas')
                     
-                seats_index_LT, seats_index_GT, seats_country = loadCountryAndInst(country)
+                seats_index_LT, seats_index_GT, seats_country = loadCountryAndInst(country, program)
                 df = pd.DataFrame()
 
                 for index, row in seats_index_GT.iterrows():
@@ -188,7 +188,7 @@ def main():
 
 
 @st.experimental_singleton
-def loadCountryAndInst(country):
+def loadCountryAndInst(country, program):
     url2 = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/Institutions%20(Mon%20May%2016%202022).xlsx"
     countryAndInstDf = pd.read_excel(url2)
     url = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/Flows%20(Mon%20May%2016%202022).xlsx"
@@ -285,6 +285,8 @@ def loadCountryAndInst(country):
     conv_Programa = conv_Programa.rename(columns={'Name': 'ConvenioName'})
     new3 = seats_index.merge(conv_Programa, on='RelationID', how='left')
     seats_index = new3
+    if program:
+        seats_index = seats_index[seats_index["Degree Programme"].str.contains(program)]
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
     if country:
