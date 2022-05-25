@@ -286,7 +286,7 @@ def loadCountryAndInst(country, program):
     new3 = seats_index.merge(conv_Programa, on='RelationID', how='left')
     seats_index = new3
     if program:
-        seats_index = seats_index[seats_index["Degree Programme"].str.contains(program)]
+        seats_index = seats_index[seats_index["Degree programme"].str.contains(program)]
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
     if country:
