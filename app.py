@@ -91,8 +91,8 @@ def main():
                     aux = pd.concat([df, df_y], axis=1)
                     aux = aux.sort_values(by = [1], ascending = False).head(3)
                     st.write(aux)
-                except:
-                    st.write('Ocurrio un error al analizar la sugenrencias de convenios')
+                except Exception as e:
+                    st.write('Ocurrio un error al analizar la sugenrencias de convenios: '+e)
     if option=='Segmentacion de Estudiantes':
         try:
             st.pyplot(clusters(data_clean, data_scaled))
