@@ -167,7 +167,7 @@ def main():
                 aux3 = aux2.sort_values(by = [1], ascending = False).head(1)
                 aux3["Preferencia"] = "Pais"
                 
-                rank = pd.concat([aux1, aux2, aux3], axis=1)
+                rank = pd.concat([aux, aux2, aux3], axis=1)
                 st.write(rank)
     if option=='Segmentacion de Estudiantes':
         try:
