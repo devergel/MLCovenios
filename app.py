@@ -21,7 +21,7 @@ from sklearn.svm import SVC
 import matplotlib.pyplot as plt
 import seaborn as sns
 def main():
-    countryDf, idioma1Df, instDf, programDf, data_clean, data_scaled, X_train, y_train, X_test, y_test = preprocess()
+    countryDf, idioma1Df, instDf, programDf, facDf, data_clean, data_scaled, X_train, y_train, X_test, y_test, facultades = preprocess()
     random = model(X_train, y_train)
     st.title('Recomendacion de Convenios de Universidades del Exteriror')
     st.sidebar.title('Convenios')
@@ -64,7 +64,7 @@ def main():
                     except:
                         st.write('Ocurrio un error al extraer los idiomas')
                     
-                    seats_country, seats_index_LT, seats_index_GT, facultades = loadCountryAndInst(country)
+                    seats_country, seats_index_LT, seats_index_GT = loadCountryAndInst(country)
                     df = pd.DataFrame()
 
                     for index, row in seats_index_GT.iterrows():
@@ -81,7 +81,7 @@ def main():
                           InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
 
                         df2 = {'Relation: ID': row["RelationID"], 'Country': countryA, 'Institution': InstitutionA, 'Stay: Degree programme':programDf[programDf['label'] == program]["code"].values.item(0), 'Stay: Semestre actual de estudios': semestre, 'Stay: GPA outgoing': promedio, 
-                               'Chinese': 1 if lenguaje_1=='Chinese' or lenguaje_2=='Chinese' or lenguaje_3=='Chinese' else 0, 'Faculty': 2,'English': 1 if lenguaje_1=='English' or lenguaje_2=='English' or lenguaje_3=='English' else 0, 'French': 1 if lenguaje_1=='French' or lenguaje_2=='French' or lenguaje_3=='French' else 0, 'German': 1 if lenguaje_1=='German' or lenguaje_2=='German' or lenguaje_3=='German' else 0, 'Italian': 1 if lenguaje_1=='Italian' or lenguaje_2=='Italian' or lenguaje_3=='Italian' else 0, 'Japanese': 1 if lenguaje_1=='Japanese' or lenguaje_2=='Japanese' or lenguaje_3=='Japanese' else 0, 'Korean': 1 if lenguaje_1=='Korean' or lenguaje_2=='Korean' or lenguaje_3=='Korean' else 0, 'Portuguese': 1 if lenguaje_1=='Portuguese' or lenguaje_2=='Portuguese' or lenguaje_3=='Portuguese' else 0}
+                               'Chinese': 1 if lenguaje_1=='Chinese' or lenguaje_2=='Chinese' or lenguaje_3=='Chinese' else 0, 'Faculty': facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0),'English': 1 if lenguaje_1=='English' or lenguaje_2=='English' or lenguaje_3=='English' else 0, 'French': 1 if lenguaje_1=='French' or lenguaje_2=='French' or lenguaje_3=='French' else 0, 'German': 1 if lenguaje_1=='German' or lenguaje_2=='German' or lenguaje_3=='German' else 0, 'Italian': 1 if lenguaje_1=='Italian' or lenguaje_2=='Italian' or lenguaje_3=='Italian' else 0, 'Japanese': 1 if lenguaje_1=='Japanese' or lenguaje_2=='Japanese' or lenguaje_3=='Japanese' else 0, 'Korean': 1 if lenguaje_1=='Korean' or lenguaje_2=='Korean' or lenguaje_3=='Korean' else 0, 'Portuguese': 1 if lenguaje_1=='Portuguese' or lenguaje_2=='Portuguese' or lenguaje_3=='Portuguese' else 0}
 
 
                         df = df.append(df2, ignore_index = True)
@@ -204,10 +204,7 @@ def loadCountryAndInst(country):
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
     
-    url5 = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/Courses%20(Tue%20May%2024%202022).xlsx"
-
-    facultades = pd.read_excel(url5)
-    return seats_country, seats_index_LT, seats_index_GT, facultades
+    return seats_country, seats_index_LT, seats_index_GT
     
 
 @st.experimental_singleton
@@ -216,7 +213,7 @@ def loadData():
     return pd.read_excel(url)
     
     
-def asignar_facultad(row):
+def asignar_facultad(facultades,row):
   temp_row = facultades.loc[facultades['Name'] == row["Stay: Degree programme"]]
   if len(temp_row) != 0:
     val = temp_row["Sub institution"].iat[0]
@@ -253,9 +250,12 @@ def preprocess():
     data = loadData()
     lb_make = LabelEncoder()
     data_clean = data
+    
+    url5 = "https://raw.githubusercontent.com/devergel/MLCovenios/main/Dataset/Courses%20(Tue%20May%2024%202022).xlsx"
 
+    facultades = pd.read_excel(url5)
     #Generar la etiqueta Mobility a partir de las condiciones de la función lable_mobility
-    data_clean['Mobility'] = data_clean.apply (lambda row: lable_mobility(row), axis=1)
+    data_clean['Mobility'] = data_clean.apply (lambda row: lable_mobility(facultades,row), axis=1)
     data_clean = data_clean[data_clean['Mobility'] >= 0]
 
     #Limpieza de registros de acuerdo a la logica de Ranks
@@ -305,8 +305,12 @@ def preprocess():
     data_clean["Stay: GPA outgoing"]=data_clean["Stay: GPA outgoing"].str.replace(',','.').astype(float)
 
     #Asignar la facultad segun el programa
+    facDf=pd.DataFrame()
     data_clean['Faculty'] = data_clean.apply (lambda row: asignar_facultad(row), axis=1)
+    facDf["label"] = data_clean["Faculty"]
     data_clean["Faculty"] = lb_make.fit_transform(data_clean["Faculty"])
+    facDf["code"] = data_clean["Faculty"]
+    facDf=facDf.drop_duplicates(['code','label'])[['code','label']]
 
     #Pasar la columna Country de categórica a numérica
     countryDf=pd.DataFrame()
@@ -354,7 +358,7 @@ def preprocess():
     data_clean = data_clean.fillna(0)
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
-    return countryDf, idioma1Df, instDf, programDf, data_clean, datos_scaled, train.drop(['Mobility'],axis=1), train['Mobility'], test.drop(['Mobility'],axis=1), test['Mobility']  
+    return countryDf, idioma1Df, instDf, programDf, facDf, data_clean, datos_scaled, train.drop(['Mobility'],axis=1), train['Mobility'], test.drop(['Mobility'],axis=1), test['Mobility'], facultades  
  
 
 @st.experimental_singleton
