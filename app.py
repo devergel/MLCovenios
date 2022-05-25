@@ -54,16 +54,19 @@ def main():
             
             if submit_button:
                 try:
+                lenguaje_1 = ''
+                lenguaje_2 = ''
+                lenguaje_3 = ''
                     if len(languaje)>=1:
                         lenguaje_1 = languaje[0]
                     if len(languaje)>=2:
                         lenguaje_2 = languaje[1]
                     if len(languaje)>=3:
-                            lenguaje_3 = languaje[2]
+                        lenguaje_3 = languaje[2]
                 except:
                     st.write('Ocurrio un error al extraer los idiomas')
                     
-                seats_index_LT, seats_index_GT = loadCountryAndInst(country)
+                seats_index_LT, seats_index_GT, seats_country = loadCountryAndInst(country)
                 df = pd.DataFrame()
 
                 for index, row in seats_index_GT.iterrows():
@@ -90,13 +93,82 @@ def main():
 
                     
                     df = df.append(df2, ignore_index = True)
-                
-                st.write(df)                
+                              
                 y_pred_GT = random.predict_proba(df)
+                
                 df_y = pd.DataFrame(y_pred_GT)
-                aux = pd.concat([df, df_y], axis=1)
+                aux = pd.concat([seats_index_GT, df_y], axis=1)
                 aux = aux.sort_values(by = [1], ascending = False).head(3)
-                st.write(aux)
+                aux["Preferencia"] = "Disponibilidad"
+                
+                df = pd.DataFrame()
+
+                for index, row in seats_index_LT.iterrows():
+                    try: 
+                        countryA=countryDf[countryDf['label'] == row["Country"]].values.item(0)
+                    except:
+                        countryDf = countryDf.append({'code': (countryDf['code'].max() + 1), 'label': row["Country"]}, ignore_index = True)
+                        countryA= countryDf[countryDf['label'] == row["Country"]].values.item(0)
+
+                    try: 
+                        InstitutionA=instDf[instDf['label'] == row["Name"]]["code"].values.item(0)
+                    except:
+                        instDf = instDf.append({'code': (instDf['code'].max() + 1), 'label': row["Name"]}, ignore_index = True)
+                        InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
+                        
+                    try: 
+                        fac=facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0)
+                    except:
+                        fac = 1
+
+
+                    df2 = {'Relation: ID': row["RelationID"], 'Country': countryA, 'Institution': InstitutionA, 'Stay: Degree programme':programDf[programDf['label'] == program]["code"].values.item(0), 'Stay: Semestre actual de estudios': semestre, 'Stay: GPA outgoing': promedio, 
+                               'Chinese': 1 if lenguaje_1=='Chinese' or lenguaje_2=='Chinese' or lenguaje_3=='Chinese' else 0, 'Faculty': fac,'English': 1 if lenguaje_1=='English' or lenguaje_2=='English' or lenguaje_3=='English' else 0, 'French': 1 if lenguaje_1=='French' or lenguaje_2=='French' or lenguaje_3=='French' else 0, 'German': 1 if lenguaje_1=='German' or lenguaje_2=='German' or lenguaje_3=='German' else 0, 'Italian': 1 if lenguaje_1=='Italian' or lenguaje_2=='Italian' or lenguaje_3=='Italian' else 0, 'Japanese': 1 if lenguaje_1=='Japanese' or lenguaje_2=='Japanese' or lenguaje_3=='Japanese' else 0, 'Korean': 1 if lenguaje_1=='Korean' or lenguaje_2=='Korean' or lenguaje_3=='Korean' else 0, 'Portuguese': 1 if lenguaje_1=='Portuguese' or lenguaje_2=='Portuguese' or lenguaje_3=='Portuguese' else 0}
+
+                    
+                    df = df.append(df2, ignore_index = True)
+                    
+                y_pred_LT = random.predict_proba(df)
+                df_y = pd.DataFrame(y_pred_LT)
+                aux2 = pd.concat([seats_index_LT, df_y], axis=1)
+                aux2 = aux2.sort_values(by = [1], ascending = False).head(3)
+                aux2["Preferencia"] = "Calidad"
+                
+                df = pd.DataFrame()
+
+                for index, row in seats_country.iterrows():
+                    try: 
+                        countryA=countryDf[countryDf['label'] == row["Country"]].values.item(0)
+                    except:
+                        countryDf = countryDf.append({'code': (countryDf['code'].max() + 1), 'label': row["Country"]}, ignore_index = True)
+                        countryA= countryDf[countryDf['label'] == row["Country"]].values.item(0)
+
+                    try: 
+                        InstitutionA=instDf[instDf['label'] == row["Name"]]["code"].values.item(0)
+                    except:
+                        instDf = instDf.append({'code': (instDf['code'].max() + 1), 'label': row["Name"]}, ignore_index = True)
+                        InstitutionA= instDf[instDf['label'] == row["Name"]].values.item(0)
+                        
+                    try: 
+                        fac=facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0)
+                    except:
+                        fac = 1
+
+
+                    df2 = {'Relation: ID': row["RelationID"], 'Country': countryA, 'Institution': InstitutionA, 'Stay: Degree programme':programDf[programDf['label'] == program]["code"].values.item(0), 'Stay: Semestre actual de estudios': semestre, 'Stay: GPA outgoing': promedio, 
+                               'Chinese': 1 if lenguaje_1=='Chinese' or lenguaje_2=='Chinese' or lenguaje_3=='Chinese' else 0, 'Faculty': fac,'English': 1 if lenguaje_1=='English' or lenguaje_2=='English' or lenguaje_3=='English' else 0, 'French': 1 if lenguaje_1=='French' or lenguaje_2=='French' or lenguaje_3=='French' else 0, 'German': 1 if lenguaje_1=='German' or lenguaje_2=='German' or lenguaje_3=='German' else 0, 'Italian': 1 if lenguaje_1=='Italian' or lenguaje_2=='Italian' or lenguaje_3=='Italian' else 0, 'Japanese': 1 if lenguaje_1=='Japanese' or lenguaje_2=='Japanese' or lenguaje_3=='Japanese' else 0, 'Korean': 1 if lenguaje_1=='Korean' or lenguaje_2=='Korean' or lenguaje_3=='Korean' else 0, 'Portuguese': 1 if lenguaje_1=='Portuguese' or lenguaje_2=='Portuguese' or lenguaje_3=='Portuguese' else 0}
+
+                    
+                    df = df.append(df2, ignore_index = True)
+                    
+                y_pred_country = random.predict_proba(df)
+                df_y = pd.DataFrame(y_pred_country)
+                aux3 = pd.concat([seats_country, df_y], axis=1)
+                aux3 = aux2.sort_values(by = [1], ascending = False).head(1)
+                aux3["Preferencia"] = "Pais"
+                
+                rank = pd.concat([aux1, aux2, aux3], axis=1)
+                st.write(rank)
     if option=='Segmentacion de Estudiantes':
         try:
             st.pyplot(clusters(data_clean, data_scaled))
@@ -204,8 +276,10 @@ def loadCountryAndInst(country):
     seats_index = new3
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
+    if country:
+        seats_country = seats_index[seats_index['Country'] == country]
     
-    return seats_index_LT, seats_index_GT
+    return seats_index_LT, seats_index_GT, seats_country
     
 
 @st.experimental_singleton
