@@ -40,11 +40,11 @@ def main():
                 program = st.selectbox('Degree programme:',
                                        programDf["label"])
                 promedio = st.number_input("GPA:", 0.0, 10.0, step=0.1, format="%.2f")
-                country = st.selectbox('Country:',
+                country = st.selectbox('Preferred country:',
                                        countryDf["label"])
 
             with col2:
-                languaje = st.multiselect("Languages Max 3 Options:",
+                languaje = st.multiselect("Certified Languages (at most 3):",
                                           idioma1Df["label"])
                 if len(languaje) < 1:
                     st.write('Select at least 1 language')
