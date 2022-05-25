@@ -92,7 +92,7 @@ def main():
                     aux = aux.sort_values(by = [1], ascending = False).head(3)
                     st.write(aux)
                 except Exception as e:
-                    st.write('Ocurrio un error al analizar la sugenrencias de convenios: '+e)
+                    st.write('Ocurrio un error al analizar la sugenrencias de convenios: '+str(e))
     if option=='Segmentacion de Estudiantes':
         try:
             st.pyplot(clusters(data_clean, data_scaled))
