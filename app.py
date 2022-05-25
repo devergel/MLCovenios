@@ -178,6 +178,7 @@ def main():
                 
                 rank = aux.append(aux2, ignore_index = True)
                 rank = rank.append(aux3, ignore_index = True)
+                rank = rank.sort_values(by = [1], ascending = False)
                 st.write(rank)
     if option=='Segmentacion de Estudiantes':
         try:
