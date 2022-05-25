@@ -99,6 +99,7 @@ def main():
                 df_y_GT = pd.DataFrame(y_pred_GT)
                 aux = pd.concat([seats_index_GT, df_y_GT], axis=1)
                 aux = aux[aux["RelationID"]>0]
+                aux = aux.groupby(['RelationID'], sort=False)["1"].max()
                 aux = aux.sort_values(by = [1], ascending = False).head(3)
                 aux["Preferencia"] = "Disponibilidad"
                 
@@ -133,6 +134,7 @@ def main():
                 df_y_LT = pd.DataFrame(y_pred_LT)
                 aux2 = pd.concat([seats_index_LT, df_y_LT], axis=1)
                 aux2 = aux2[aux2["RelationID"]>0]
+                aux2 = aux2.groupby(['RelationID'], sort=False)["1"].max()
                 aux2 = aux2.sort_values(by = [1], ascending = False).head(3)
                 aux2["Preferencia"] = "Calidad"
                 
@@ -167,6 +169,7 @@ def main():
                 df_y_country = pd.DataFrame(y_pred_country)
                 aux3 = pd.concat([seats_country, df_y_country], axis=1)
                 aux3 = aux3[aux3["RelationID"]>0]
+                aux3 = aux3.groupby(['RelationID'], sort=False)["1"].max()
                 aux3 = aux3.sort_values(by = [1], ascending = False).head(1)
                 aux3["Preferencia"] = "Pais"
                 
