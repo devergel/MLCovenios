@@ -82,11 +82,12 @@ def main():
                     df2 = {'Relation: ID': row["RelationID"], 'Country': countryA, 'Institution': InstitutionA, 'Stay: Degree programme':programDf[programDf['label'] == program]["code"].values.item(0), 'Stay: Semestre actual de estudios': semestre, 'Stay: GPA outgoing': promedio, 
                                'Chinese': 1 if lenguaje_1=='Chinese' or lenguaje_2=='Chinese' or lenguaje_3=='Chinese' else 0, 'Faculty': facDf[facDf['label'] == facultades[facultades["Name"]==program]["Sub institution"].values.item(0)]["code"].values.item(0),'English': 1 if lenguaje_1=='English' or lenguaje_2=='English' or lenguaje_3=='English' else 0, 'French': 1 if lenguaje_1=='French' or lenguaje_2=='French' or lenguaje_3=='French' else 0, 'German': 1 if lenguaje_1=='German' or lenguaje_2=='German' or lenguaje_3=='German' else 0, 'Italian': 1 if lenguaje_1=='Italian' or lenguaje_2=='Italian' or lenguaje_3=='Italian' else 0, 'Japanese': 1 if lenguaje_1=='Japanese' or lenguaje_2=='Japanese' or lenguaje_3=='Japanese' else 0, 'Korean': 1 if lenguaje_1=='Korean' or lenguaje_2=='Korean' or lenguaje_3=='Korean' else 0, 'Portuguese': 1 if lenguaje_1=='Portuguese' or lenguaje_2=='Portuguese' or lenguaje_3=='Portuguese' else 0}
 
-
-                    df = df.append(df2, ignore_index = True)
                     
+                    df = df.append(df2, ignore_index = True)
+                
+                st.write(df)                
                 y_pred_GT = random.predict_proba(df)
-                df_y = pd.DataFrame(y_pred)
+                df_y = pd.DataFrame(y_pred_GT)
                 aux = pd.concat([df, df_y], axis=1)
                 aux = aux.sort_values(by = [1], ascending = False).head(3)
                 st.write(aux)
