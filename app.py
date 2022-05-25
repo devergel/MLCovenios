@@ -255,7 +255,7 @@ def preprocess():
 
     facultades = pd.read_excel(url5)
     #Generar la etiqueta Mobility a partir de las condiciones de la función lable_mobility
-    data_clean['Mobility'] = data_clean.apply (lambda row: lable_mobility(facultades,row), axis=1)
+    data_clean['Mobility'] = data_clean.apply (lambda row: lable_mobility(row), axis=1)
     data_clean = data_clean[data_clean['Mobility'] >= 0]
 
     #Limpieza de registros de acuerdo a la logica de Ranks
@@ -306,7 +306,7 @@ def preprocess():
 
     #Asignar la facultad segun el programa
     facDf=pd.DataFrame()
-    data_clean['Faculty'] = data_clean.apply (lambda row: asignar_facultad(row), axis=1)
+    data_clean['Faculty'] = data_clean.apply (lambda row: asignar_facultad(facultades,row), axis=1)
     facDf["label"] = data_clean["Faculty"]
     data_clean["Faculty"] = lb_make.fit_transform(data_clean["Faculty"])
     facDf["code"] = data_clean["Faculty"]
