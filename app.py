@@ -202,7 +202,7 @@ def main():
 
                     df = df.append(df2, ignore_index=True)
                     
-                if df:
+                if len(df)> 0:
                     y_pred_country = random.predict_proba(df)
                     df_y_country = pd.DataFrame(y_pred_country)
                     aux3 = pd.concat([seats_country, df_y_country], axis=1)
