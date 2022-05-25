@@ -54,9 +54,9 @@ def main():
             
             if submit_button:
                 try:
-                lenguaje_1 = ''
-                lenguaje_2 = ''
-                lenguaje_3 = ''
+                    lenguaje_1 = ''
+                    lenguaje_2 = ''
+                    lenguaje_3 = ''
                     if len(languaje)>=1:
                         lenguaje_1 = languaje[0]
                     if len(languaje)>=2:
