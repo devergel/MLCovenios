@@ -358,6 +358,7 @@ def preprocess():
     data_clean = data_clean.fillna(0)
     scaler = StandardScaler()
     datos_scaled = scaler.fit_transform(data_clean)
+    train, test = train_test_split(data_clean, test_size=0.2, random_state=33)
     return countryDf, idioma1Df, instDf, programDf, facDf, data_clean, datos_scaled, train.drop(['Mobility'],axis=1), train['Mobility'], test.drop(['Mobility'],axis=1), test['Mobility'], facultades  
  
 
