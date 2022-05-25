@@ -127,7 +127,6 @@ def loadCountryAndInst(country):
     seats_clean["RemainingSeats"] = seats_clean["Remaining seats"].apply(lambda x: 0 if x < 0 else x)
     seats_clean["aux"] = seats_clean["Remaining seats"].apply(lambda x: (x*(-1)) if x < 0 else 0)
     seats_clean["NumOffered"] = seats_clean["Number"] + seats_clean["aux"] 
-    seats_clean = seats_clean[seats_clean["Remaining seats"]<0]
     seats_clean.drop('aux', inplace=True, axis=1)	
     seats_clean.drop('Remaining seats', inplace=True, axis=1)	
     seats_clean.drop('Number', inplace=True, axis=1) 
