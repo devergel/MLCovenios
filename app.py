@@ -203,8 +203,6 @@ def loadCountryAndInst(country):
     conv_Programa = conv_Programa.rename(columns={'Name': 'ConvenioName'})
     new3 = seats_index.merge(conv_Programa, on='RelationID', how='left')
     seats_index = new3
-    if country:
-        seats_country = seats_index[seats_index['Country'] == country]
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
     
