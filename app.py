@@ -63,7 +63,7 @@ def main():
                 except:
                     st.write('Ocurrio un error al extraer los idiomas')
                     
-                seats_country, seats_index_LT, seats_index_GT = loadCountryAndInst(country)
+                seats_index_LT, seats_index_GT = loadCountryAndInst(country)
                 df = pd.DataFrame()
 
                 for index, row in seats_index_GT.iterrows():
@@ -206,7 +206,7 @@ def loadCountryAndInst(country):
     seats_index_LT = seats_index[seats_index['availabiltyIndex'] < 0.4]
     seats_index_GT = seats_index[seats_index['availabiltyIndex'] >= 0.4]
     
-    return seats_country, seats_index_LT, seats_index_GT
+    return seats_index_LT, seats_index_GT
     
 
 @st.experimental_singleton
