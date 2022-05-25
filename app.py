@@ -213,9 +213,10 @@ def main():
                     aux3 = aux3[aux3["count_max"] == aux3[1]]
                     aux3 = aux3.sort_values(by=[1], ascending=False).head(1)
                     aux3["Preferencia"] = "Country"
-                    rank = aux.append(aux3, ignore_index=True)
+                    rank = rank.append(aux3, ignore_index=True)
 
-                rank = aux.append(aux2, ignore_index=True)
+                rank = rank.append(aux, ignore_index=True)
+                rank = rank.append(aux2, ignore_index=True)
                 rank = rank.sort_values(by=[1], ascending=False)
 
                 rank.drop(["institutionID"], inplace=True, axis=1)
