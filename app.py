@@ -164,10 +164,11 @@ def main():
                 y_pred_country = random.predict_proba(df)
                 df_y = pd.DataFrame(y_pred_country)
                 aux3 = pd.concat([seats_country, df_y], axis=1)
-                aux3 = aux2.sort_values(by = [1], ascending = False).head(1)
+                aux3 = aux3.sort_values(by = [1], ascending = False).head(1)
                 aux3["Preferencia"] = "Pais"
                 
-                rank = pd.concat([aux, aux2, aux3], axis=1)
+                rank = aux.append(aux2, ignore_index = True)
+                rank = rank.append(aux3, ignore_index = True)
                 st.write(rank)
     if option=='Segmentacion de Estudiantes':
         try:
